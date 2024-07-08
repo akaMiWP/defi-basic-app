@@ -2,6 +2,7 @@ import React from "react";
 import appIcon from "../assets/app-icon.webp";
 import { Box, HStack, Image, Text } from "@chakra-ui/react";
 import Account from "./Account";
+import ColorModeToggler from "./ColorModeToggler";
 
 const NavigationBar = () => {
   return (
@@ -17,7 +18,10 @@ const NavigationBar = () => {
             Dogie Swap
           </Text>
         </HStack>
-        <Account />
+        <HStack>
+          <ColorModeToggler />
+          <Account />
+        </HStack>
       </HStack>
     </>
   );

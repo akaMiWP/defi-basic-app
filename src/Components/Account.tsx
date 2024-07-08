@@ -27,7 +27,7 @@ const Account = () => {
             </Text>
           )}
           <Button
-            color={account ? "orange.200" : "teal.50"}
+            color={account ? "orange.200" : "teal.400"}
             onClick={requestWeb3Account}
           >
             {account ? "Connected" : "Connect"}
