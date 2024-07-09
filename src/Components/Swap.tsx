@@ -40,6 +40,32 @@ const Swap = () => {
           </Flex>
         </Box>
       </Center>
+      <Center>
+        <Box as="button" boxSize={12}>
+          <ChevronDownIcon />
+        </Box>
+      </Center>
+      <Center marginTop={1}>
+        <Box
+          w="30%"
+          bg="teal.900"
+          justifyContent="center"
+          height="125px"
+          borderRadius={12}
+        >
+          <Text fontSize="sm" padding={4}>
+            Buy
+          </Text>
+          <Flex paddingLeft={4} paddingRight={4}>
+            <Input placeholder="0" variant="unstyled" fontSize="2xl" />
+            <Spacer />
+            <Button borderRadius={18}>
+              <Text>BTC</Text>
+              <ChevronDownIcon marginLeft={2} />
+            </Button>
+          </Flex>
+        </Box>
+      </Center>
     </>
   );
 };
