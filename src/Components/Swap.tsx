@@ -66,6 +66,20 @@ const Swap = () => {
           </Flex>
         </Box>
       </Center>
+      <Center marginTop={6}>
+        <Box
+          as="button"
+          w="30%"
+          bg="teal.600"
+          justifyContent="center"
+          height="50px"
+          borderRadius={12}
+        >
+          <Text fontSize="sm" padding={4}>
+            Approve
+          </Text>
+        </Box>
+      </Center>
     </>
   );
 };
