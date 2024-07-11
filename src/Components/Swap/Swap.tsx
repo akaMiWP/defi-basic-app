@@ -1,18 +1,8 @@
-import {
-  Box,
-  Button,
-  Center,
-  Flex,
-  Icon,
-  Input,
-  Spacer,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, Center, Text } from "@chakra-ui/react";
 
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
 import priceFeed from "../../hooks/PriceFeed";
-import { Pair } from "../../interfaces/Pair";
 import InputComponent from "./InputComponent";
 
 import { pairs } from "../../interfaces/Pair";
@@ -27,7 +17,6 @@ const baseCurrencyList: string[] = Array.from(baseCurrencySet);
 const destinationCurrencyList: string[] = Array.from(destinationCurrencySet);
 
 const Swap = () => {
-  const [pair, setPair] = useState<Pair | null>(null);
   const [baseCurrency, setBaseCurrency] = useState<string | null>(null);
   const [destinationCurrency, setDestinationCurrency] = useState<string | null>(
     null
@@ -48,7 +37,7 @@ const Swap = () => {
         </Box>
       </Center>
       <InputComponent
-        key="sell"
+        key={`sell-${baseCurrency}`}
         inputTitle="Sell"
         marginTop={4}
         tokens={baseCurrencyList}
@@ -61,7 +50,7 @@ const Swap = () => {
         </Box>
       </Center>
       <InputComponent
-        key="buy"
+        key={`buy-${destinationCurrency}`}
         inputTitle="Buy"
         marginTop={1}
         tokens={destinationCurrencyList}
