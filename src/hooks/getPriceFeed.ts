@@ -55,15 +55,15 @@ const abi = [
 ];
 const contract = new ethers.Contract(address, abi, provider);
 
-export default async function priceFeed(sell: string, buy: string) {
+export default async function getPriceFeed(sell: string, buy: string) {
   try {
     const priceFeed: string = sell + "/" + buy;
-    console.log(priceFeed);
-
-    const price: number = await contract.getChainlinkDataFeedLatestAnswer(
+    const priceInBigInt = await contract.getChainlinkDataFeedLatestAnswer(
       priceFeed
     );
-    console.log(price);
+    const price = ethers.utils.formatEther(priceInBigInt);
+    console.log(priceFeed, price);
+    return price;
   } catch (error) {
     console.log(error);
   }
