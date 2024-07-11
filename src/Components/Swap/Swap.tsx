@@ -15,6 +15,17 @@ import priceFeed from "../../hooks/PriceFeed";
 import { Pair } from "../../interfaces/Pair";
 import InputComponent from "./InputComponent";
 
+import { pairs } from "../../interfaces/Pair";
+
+const baseCurrencySet: Set<string> = new Set(
+  pairs.map((pair) => pair.baseCurrency)
+);
+const destinationCurrencySet: Set<string> = new Set(
+  pairs.map((pair) => pair.destinationCurrency)
+);
+const baseCurrencyList: string[] = Array.from(baseCurrencySet);
+const destinationCurrencyList: string[] = Array.from(destinationCurrencySet);
+
 const Swap = () => {
   const [pair, setPair] = useState<Pair | null>(null);
   const [baseCurrency, setBaseCurrency] = useState<string | null>(null);
@@ -36,13 +47,21 @@ const Swap = () => {
           <Button>Swap</Button>
         </Box>
       </Center>
-      <InputComponent inputTitle="Sell" marginTop={4}></InputComponent>
+      <InputComponent
+        inputTitle="Sell"
+        marginTop={4}
+        tokens={baseCurrencyList}
+      ></InputComponent>
       <Center>
         <Box as="button" boxSize={12}>
           <ChevronDownIcon />
         </Box>
       </Center>
-      <InputComponent inputTitle="Buy" marginTop={1}></InputComponent>
+      <InputComponent
+        inputTitle="Buy"
+        marginTop={1}
+        tokens={destinationCurrencyList}
+      ></InputComponent>
       <Center marginTop={6}>
         <Box
           as="button"

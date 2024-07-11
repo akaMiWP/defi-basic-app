@@ -1,6 +1,6 @@
 export interface Pair {
-  baseCurrency: string | null;
-  destinationCurrency: string | null;
+  baseCurrency: string;
+  destinationCurrency: string;
   price: bigint | null;
 }
 
