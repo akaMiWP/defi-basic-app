@@ -34,9 +34,9 @@ const Swap = () => {
   );
 
   useEffect(() => {
-    priceFeed();
     if (baseCurrency && destinationCurrency) {
-      console.log();
+      console.log("Got base currency and destination currency");
+      priceFeed(baseCurrency, destinationCurrency);
     }
   }, [baseCurrency, destinationCurrency]);
 
@@ -48,6 +48,7 @@ const Swap = () => {
         </Box>
       </Center>
       <InputComponent
+        key="sell"
         inputTitle="Sell"
         marginTop={4}
         tokens={baseCurrencyList}
@@ -60,6 +61,7 @@ const Swap = () => {
         </Box>
       </Center>
       <InputComponent
+        key="buy"
         inputTitle="Buy"
         marginTop={1}
         tokens={destinationCurrencyList}
