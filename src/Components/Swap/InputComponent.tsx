@@ -10,11 +10,16 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 
-const InputComponent = () => {
+interface Props {
+  inputTitle: string;
+  marginTop: number;
+}
+
+const InputComponent = ({ inputTitle, marginTop }: Props) => {
   useState("");
 
   return (
-    <Center marginTop={4}>
+    <Center marginTop={marginTop}>
       <Box
         w="30%"
         bg="teal.900"
@@ -23,7 +28,7 @@ const InputComponent = () => {
         borderRadius={12}
       >
         <Text fontSize="sm" padding={4}>
-          Sell
+          {inputTitle}
         </Text>
         <Flex paddingLeft={4} paddingRight={4}>
           <Input placeholder="0" variant="unstyled" fontSize="2xl" />
