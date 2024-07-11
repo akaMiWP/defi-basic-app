@@ -18,11 +18,17 @@ interface Props {
   inputTitle: string;
   marginTop: number;
   tokens: string[];
+  selectedInput: string | null;
+  setSelectedInput: (input: string) => void;
 }
 
-const InputComponent = ({ inputTitle, marginTop, tokens }: Props) => {
-  const [selectedInput, setSelectedInput] = useState<string | null>(null);
-
+const InputComponent = ({
+  inputTitle,
+  marginTop,
+  tokens,
+  selectedInput,
+  setSelectedInput,
+}: Props) => {
   return (
     <Center marginTop={marginTop}>
       <Box

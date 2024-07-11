@@ -29,7 +29,7 @@ const destinationCurrencyList: string[] = Array.from(destinationCurrencySet);
 const Swap = () => {
   const [pair, setPair] = useState<Pair | null>(null);
   const [baseCurrency, setBaseCurrency] = useState<string | null>(null);
-  const [destinationCurrency, setDestinatonCurrency] = useState<string | null>(
+  const [destinationCurrency, setDestinationCurrency] = useState<string | null>(
     null
   );
 
@@ -51,6 +51,8 @@ const Swap = () => {
         inputTitle="Sell"
         marginTop={4}
         tokens={baseCurrencyList}
+        selectedInput={baseCurrency}
+        setSelectedInput={setBaseCurrency}
       ></InputComponent>
       <Center>
         <Box as="button" boxSize={12}>
@@ -61,6 +63,8 @@ const Swap = () => {
         inputTitle="Buy"
         marginTop={1}
         tokens={destinationCurrencyList}
+        selectedInput={destinationCurrency}
+        setSelectedInput={setDestinationCurrency}
       ></InputComponent>
       <Center marginTop={6}>
         <Box
