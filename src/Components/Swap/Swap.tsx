@@ -37,7 +37,6 @@ const Swap = () => {
         </Box>
       </Center>
       <InputComponent
-        key={`sell-${baseCurrency}`}
         inputTitle="Sell"
         marginTop={4}
         tokens={baseCurrencyList}
@@ -50,8 +49,7 @@ const Swap = () => {
         </Box>
       </Center>
       <InputComponent
-        key={`buy-${destinationCurrency}`}
-        inputTitle="Buy"
+        inputTitle="Buy1"
         marginTop={1}
         tokens={destinationCurrencyList}
         selectedInput={destinationCurrency}

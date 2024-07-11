@@ -51,10 +51,7 @@ const InputComponent = ({
             <MenuList>
               {tokens.map((token) => {
                 return (
-                  <MenuItem
-                    key={inputTitle}
-                    onClick={() => setSelectedInput(token)}
-                  >
+                  <MenuItem key={token} onClick={() => setSelectedInput(token)}>
                     {token}
                   </MenuItem>
                 );
