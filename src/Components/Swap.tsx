@@ -10,8 +10,14 @@ import {
 } from "@chakra-ui/react";
 
 import { ChevronDownIcon } from "@chakra-ui/icons";
+import { useEffect } from "react";
+import priceFeed from "../hooks/PriceFeed";
 
 const Swap = () => {
+  useEffect(() => {
+    priceFeed();
+  }, []);
+
   return (
     <>
       <Center marginTop={16}>

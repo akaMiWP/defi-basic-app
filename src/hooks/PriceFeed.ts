@@ -1,9 +1,11 @@
 import { ethers } from "ethers";
 
-const provider = new ethers.providers.AlchemyProvider(
-  "sepolia",
-  import.meta.env.VITE_ALCHEMY_API_KEY
-);
+// const provider = new ethers.providers.AlchemyProvider(
+//   "sepolia",
+//   import.meta.env.VITE_ALCHEMY_API_KEY
+// );
+
+const provider = new ethers.providers.Web3Provider(window.ethereum, "sepolia");
 
 const address = import.meta.env.VITE_CONSUMER_V3_ADDRESS;
 const abi = [
@@ -53,7 +55,13 @@ const abi = [
 ];
 const contract = new ethers.Contract(address, abi, provider);
 
-export default async function usePriceFeed() {
-  const price: number = contract.getChainlinkDataFeedLatestAnswer("BTC/ETH");
-  console.log(price);
+export default async function priceFeed() {
+  try {
+    const price: number = await contract.getChainlinkDataFeedLatestAnswer(
+      "BTC/ETH"
+    );
+    console.log(price);
+  } catch (error) {
+    console.log(error);
+  }
 }
