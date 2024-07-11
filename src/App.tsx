@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ChakraProvider, Text } from "@chakra-ui/react";
 import NavigationBar from "./Components/NavigationBar";
-import Swap from "./Components/Swap";
+import Swap from "./Components/Swap/Swap";
 
 function App() {
   return (
