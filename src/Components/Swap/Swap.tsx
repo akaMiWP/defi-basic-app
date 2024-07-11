@@ -54,19 +54,19 @@ const Swap = () => {
         tokens={baseCurrencyList}
         selectedInput={baseCurrency}
         setSelectedInput={setBaseCurrency}
-      ></InputComponent>
+      />
       <Center>
         <Box as="button" boxSize={12}>
           <ChevronDownIcon />
         </Box>
       </Center>
       <InputComponent
-        inputTitle="Buy1"
+        inputTitle="Buy"
         marginTop={1}
         tokens={destinationCurrencyList}
         selectedInput={destinationCurrency}
         setSelectedInput={setDestinationCurrency}
-      ></InputComponent>
+      />
       <Center marginTop={6}>
         <Box
           as="button"
@@ -82,9 +82,14 @@ const Swap = () => {
         </Box>
       </Center>
       {priceFeed && (
-        <Center paddingRight={80}>
+        <Center marginTop={6}>
           <Text fontSize="sm" padding={4}>
-            {"1" + baseCurrency + "=" + priceFeed + destinationCurrency}
+            {"1 " +
+              baseCurrency +
+              " = " +
+              priceFeed +
+              " " +
+              destinationCurrency}
           </Text>
         </Center>
       )}
