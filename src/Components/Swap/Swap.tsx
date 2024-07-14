@@ -2,10 +2,14 @@ import { Box, Button, Center, Text } from "@chakra-ui/react";
 
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useEffect, useMemo, useState } from "react";
-import { getPriceFeed, approve } from "../../hooks/getPriceFeed";
+import {
+  getPriceFeed,
+  approve,
+  hasApproved,
+  subscribeToApprovalEvent,
+} from "../../hooks/getPriceFeed";
 import InputComponent from "./InputComponent";
 
-import { pairs } from "../../interfaces/Pair";
 import tokens from "../../data/tokens";
 
 const tickers: string[] = Object.keys(tokens);
@@ -17,6 +21,7 @@ const Swap = () => {
     null
   );
   const [sellAmountInput, setSellAmountInput] = useState<string | null>(null);
+  const [actionText, setActionText] = useState<string>("Approve");
 
   const buyTickers: string[] = useMemo(() => {
     return tickers.filter((key) => key != destinationCurrency);
@@ -24,6 +29,14 @@ const Swap = () => {
 
   const sellTickers: string[] = useMemo(() => {
     return tickers.filter((key) => key != baseCurrency);
+  }, [baseCurrency]);
+
+  useMemo(async () => {
+    if (!baseCurrency) {
+      return;
+    }
+    const isApproved: boolean = await hasApproved(baseCurrency);
+    setActionText(isApproved ? "Swap" : "Approve");
   }, [baseCurrency]);
 
   useEffect(() => {
@@ -43,6 +56,13 @@ const Swap = () => {
 
     fetchPriceFeed();
   }, [baseCurrency, destinationCurrency]);
+
+  useEffect(() => {
+    if (!baseCurrency) {
+      return;
+    }
+    return subscribeToApprovalEvent(baseCurrency, setActionText);
+  }, [baseCurrency]);
 
   return (
     <>
@@ -87,7 +107,7 @@ const Swap = () => {
           }}
         >
           <Text fontSize="sm" padding={4}>
-            Approve
+            {actionText}
           </Text>
         </Box>
       </Center>

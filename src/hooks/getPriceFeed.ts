@@ -8,6 +8,7 @@ import tokens from "../data/tokens";
 
 const provider = new ethers.providers.Web3Provider(window.ethereum, "sepolia");
 const address = import.meta.env.VITE_CONSUMER_V3_ADDRESS;
+const wallet = provider.getSigner();
 
 const dexABI = [
   {
@@ -486,11 +487,7 @@ export async function getPriceFeed(
 
 export const approve = async (tokenAddress: string, input: string) => {
   console.log("Waiting for approve");
-  const tokenContract = new ethers.Contract(
-    tokenAddress,
-    erc20ABI,
-    await provider.getSigner()
-  );
+  const tokenContract = new ethers.Contract(tokenAddress, erc20ABI, wallet);
   const amount = ethers.utils.parseEther(input);
   const txResponse = await tokenContract.approve(address, amount);
   console.log("Approve Trasanction Response:", txResponse);
@@ -507,4 +504,41 @@ export const swapTokens = async (
     ethers.utils.parseEther(input)
   );
   console.log("Swap Transaction Response:", txResponse);
+};
+
+export const hasApproved = async (tokenTicker: string) => {
+  const walletAddress = await wallet.getAddress();
+  const tokenContract = new ethers.Contract(
+    tokens[tokenTicker],
+    erc20ABI,
+    provider
+  );
+  const amount: bigint = await tokenContract.allowance(walletAddress, address);
+  return amount > 0;
+};
+
+export const subscribeToApprovalEvent = (
+  tokenTicker: string,
+  setActionText: (actionText: string) => void
+) => {
+  const tokenContract = new ethers.Contract(
+    tokens[tokenTicker],
+    erc20ABI,
+    provider
+  );
+
+  const handleApproval = (owner: string, spender: string, value: number) => {
+    console.log(
+      `Approval event detected: Owner ${owner}, Spender ${spender}, Value ${value.toString()}`
+    );
+    setActionText("Swap");
+  };
+
+  console.log("Start listening to Approval events on", tokenTicker);
+  tokenContract.on("Approval", handleApproval);
+
+  return () => {
+    tokenContract.off("Approval", handleApproval);
+    console.log("Stopped listening to Approval events on", tokenTicker);
+  };
 };
