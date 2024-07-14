@@ -465,7 +465,7 @@ const erc20ABI = [
   },
 ];
 
-const dexContract = new ethers.Contract(address, dexABI, provider);
+const dexContract = new ethers.Contract(address, dexABI, wallet);
 
 export async function getPriceFeed(
   sellTokenTicker: string,
@@ -498,6 +498,7 @@ export const swapTokens = async (
   token2: string,
   input: string
 ) => {
+  console.log("Waitng for swap");
   const txResponse = await dexContract.swapTokens(
     tokens[token1],
     tokens[token2],

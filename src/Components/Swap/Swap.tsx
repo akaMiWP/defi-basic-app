@@ -7,6 +7,7 @@ import {
   approve,
   hasApproved,
   subscribeToApprovalEvent,
+  swapTokens,
 } from "../../hooks/getPriceFeed";
 import InputComponent from "./InputComponent";
 
@@ -30,6 +31,24 @@ const Swap = () => {
   const sellTickers: string[] = useMemo(() => {
     return tickers.filter((key) => key != baseCurrency);
   }, [baseCurrency]);
+
+  const actionButtonClicked = async () => {
+    if (!baseCurrency) {
+      return;
+    }
+    if (!sellAmountInput) {
+      return;
+    }
+    const isApproved: boolean = await hasApproved(baseCurrency);
+    if (isApproved) {
+      if (!destinationCurrency) {
+        return;
+      }
+      swapTokens(baseCurrency, destinationCurrency, sellAmountInput);
+    } else {
+      approve(tokens[baseCurrency], sellAmountInput);
+    }
+  };
 
   useMemo(async () => {
     if (!baseCurrency) {
@@ -100,11 +119,7 @@ const Swap = () => {
           justifyContent="center"
           height="50px"
           borderRadius={12}
-          onClick={() => {
-            baseCurrency &&
-              sellAmountInput &&
-              approve(tokens[baseCurrency], sellAmountInput);
-          }}
+          onClick={() => actionButtonClicked()}
         >
           <Text fontSize="sm" padding={4}>
             {actionText}
