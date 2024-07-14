@@ -12,7 +12,6 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import { useState } from "react";
 
 interface Props {
   inputTitle: string;
@@ -21,6 +20,10 @@ interface Props {
   selectedInput: string | null;
   setSelectedInput: (input: string) => void;
   setAmountInput: ((input: string) => void) | null;
+  input: string;
+  setInput: (input: string) => void;
+  setLastUpdated: (input: string) => void;
+  isSelling: boolean;
 }
 
 const InputComponent = ({
@@ -30,8 +33,14 @@ const InputComponent = ({
   selectedInput,
   setSelectedInput,
   setAmountInput,
+  input,
+  setInput,
+  setLastUpdated,
+  isSelling,
 }: Props) => {
   const handleChange = (event) => {
+    setInput(event.target.value);
+    setLastUpdated(isSelling ? "sell" : "buy");
     setAmountInput && setAmountInput(event.target.value);
   };
 
@@ -49,6 +58,7 @@ const InputComponent = ({
         </Text>
         <Flex paddingLeft={4} paddingRight={4}>
           <Input
+            value={input}
             placeholder="0"
             variant="unstyled"
             fontSize="2xl"

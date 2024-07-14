@@ -12,7 +12,10 @@ import {
 import InputComponent from "./InputComponent";
 
 import tokens from "../../data/tokens";
-import { calculateBuyOutput } from "../../domain/calculate-price-inputs";
+import {
+  calculateBuyOutput,
+  calculateSellInput,
+} from "../../domain/calculate-price-inputs";
 
 const tickers: string[] = Object.keys(tokens);
 
@@ -22,9 +25,10 @@ const Swap = () => {
   const [destinationCurrency, setDestinationCurrency] = useState<string | null>(
     null
   );
-  const [sellAmountInput, setSellAmountInput] = useState<string | null>(null);
-  const [buyAmountOutput, setBuyAmountOutput] = useState<string | null>(null);
+  const [sellAmountInput, setSellAmountInput] = useState<string>("");
+  const [buyAmountOutput, setBuyAmountOutput] = useState<string>("");
   const [actionText, setActionText] = useState<string>("Approve");
+  const [lastUpdated, setLastUpdated] = useState<string>("");
 
   const buyTickers: string[] = useMemo(() => {
     return tickers.filter((key) => key != destinationCurrency);
@@ -58,16 +62,30 @@ const Swap = () => {
     }
     const isApproved: boolean = await hasApproved(baseCurrency);
     setActionText(isApproved ? "Swap" : "Approve");
+  }, [baseCurrency]);
 
-    if (!sellAmountInput && !priceFeed) {
+  useEffect(() => {
+    if (!priceFeed) {
       return;
     }
-    const buyOutput = calculateBuyOutput(
-      sellAmountInput as string,
-      priceFeed as string
-    );
-    console.log("Buy output:", buyOutput);
-  }, [baseCurrency, sellAmountInput, priceFeed]);
+    if (lastUpdated === "sell") {
+      const buyOutput = calculateBuyOutput(
+        sellAmountInput as string,
+        priceFeed as string
+      );
+      setBuyAmountOutput(buyOutput as string);
+    } else if (lastUpdated === "buy") {
+      if (buyAmountOutput == "0" || buyAmountOutput == "") {
+        setSellAmountInput("0");
+        return;
+      }
+      const sellInput = calculateSellInput(
+        buyAmountOutput as string,
+        priceFeed as string
+      );
+      setSellAmountInput(sellInput as string);
+    }
+  }, [sellAmountInput, buyAmountOutput, priceFeed, lastUpdated]);
 
   useEffect(() => {
     const fetchPriceFeed = async () => {
@@ -108,6 +126,10 @@ const Swap = () => {
         selectedInput={baseCurrency}
         setSelectedInput={setBaseCurrency}
         setAmountInput={setSellAmountInput}
+        input={sellAmountInput}
+        setInput={setSellAmountInput}
+        setLastUpdated={setLastUpdated}
+        isSelling={true}
       />
       <Center>
         <Box as="button" boxSize={12}>
@@ -121,6 +143,10 @@ const Swap = () => {
         selectedInput={destinationCurrency}
         setSelectedInput={setDestinationCurrency}
         setAmountInput={null}
+        input={buyAmountOutput}
+        setInput={setBuyAmountOutput}
+        setLastUpdated={setLastUpdated}
+        isSelling={false}
       />
       <Center marginTop={6}>
         <Box
