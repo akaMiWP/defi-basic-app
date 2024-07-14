@@ -20,6 +20,7 @@ interface Props {
   tokens: string[];
   selectedInput: string | null;
   setSelectedInput: (input: string) => void;
+  setAmountInput: ((input: string) => void) | null;
 }
 
 const InputComponent = ({
@@ -28,7 +29,12 @@ const InputComponent = ({
   tokens,
   selectedInput,
   setSelectedInput,
+  setAmountInput,
 }: Props) => {
+  const handleChange = (event) => {
+    setAmountInput && setAmountInput(event.target.value);
+  };
+
   return (
     <Center marginTop={marginTop}>
       <Box
@@ -42,7 +48,12 @@ const InputComponent = ({
           {inputTitle}
         </Text>
         <Flex paddingLeft={4} paddingRight={4}>
-          <Input placeholder="0" variant="unstyled" fontSize="2xl" />
+          <Input
+            placeholder="0"
+            variant="unstyled"
+            fontSize="2xl"
+            onChange={handleChange}
+          />
           <Spacer />
           <Menu>
             <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>

@@ -485,7 +485,12 @@ export async function getPriceFeed(
 }
 
 export const approve = async (tokenAddress: string, input: string) => {
-  const tokenContract = new ethers.Contract(tokenAddress, erc20ABI, provider);
+  console.log("Waiting for approve");
+  const tokenContract = new ethers.Contract(
+    tokenAddress,
+    erc20ABI,
+    await provider.getSigner()
+  );
   const amount = ethers.utils.parseEther(input);
   const txResponse = await tokenContract.approve(address, amount);
   console.log("Approve Trasanction Response:", txResponse);

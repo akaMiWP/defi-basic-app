@@ -16,6 +16,7 @@ const Swap = () => {
   const [destinationCurrency, setDestinationCurrency] = useState<string | null>(
     null
   );
+  const [sellAmountInput, setSellAmountInput] = useState<string | null>(null);
 
   const buyTickers: string[] = useMemo(() => {
     return tickers.filter((key) => key != destinationCurrency);
@@ -56,6 +57,7 @@ const Swap = () => {
         tokens={buyTickers}
         selectedInput={baseCurrency}
         setSelectedInput={setBaseCurrency}
+        setAmountInput={setSellAmountInput}
       />
       <Center>
         <Box as="button" boxSize={12}>
@@ -68,6 +70,7 @@ const Swap = () => {
         tokens={sellTickers}
         selectedInput={destinationCurrency}
         setSelectedInput={setDestinationCurrency}
+        setAmountInput={null}
       />
       <Center marginTop={6}>
         <Box
@@ -78,7 +81,9 @@ const Swap = () => {
           height="50px"
           borderRadius={12}
           onClick={() => {
-            // approve(tokens[baseCurrency],)
+            baseCurrency &&
+              sellAmountInput &&
+              approve(tokens[baseCurrency], sellAmountInput);
           }}
         >
           <Text fontSize="sm" padding={4}>
