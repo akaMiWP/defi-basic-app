@@ -8,10 +8,11 @@ import {
   hasApproved,
   subscribeToApprovalEvent,
   swapTokens,
-} from "../../hooks/getPriceFeed";
+} from "../../domain/interact-contracts";
 import InputComponent from "./InputComponent";
 
 import tokens from "../../data/tokens";
+import { calculateBuyOutput } from "../../domain/calculate-price-inputs";
 
 const tickers: string[] = Object.keys(tokens);
 
@@ -22,6 +23,7 @@ const Swap = () => {
     null
   );
   const [sellAmountInput, setSellAmountInput] = useState<string | null>(null);
+  const [buyAmountOutput, setBuyAmountOutput] = useState<string | null>(null);
   const [actionText, setActionText] = useState<string>("Approve");
 
   const buyTickers: string[] = useMemo(() => {
@@ -56,7 +58,16 @@ const Swap = () => {
     }
     const isApproved: boolean = await hasApproved(baseCurrency);
     setActionText(isApproved ? "Swap" : "Approve");
-  }, [baseCurrency]);
+
+    if (!sellAmountInput && !priceFeed) {
+      return;
+    }
+    const buyOutput = calculateBuyOutput(
+      sellAmountInput as string,
+      priceFeed as string
+    );
+    console.log("Buy output:", buyOutput);
+  }, [baseCurrency, sellAmountInput, priceFeed]);
 
   useEffect(() => {
     const fetchPriceFeed = async () => {
