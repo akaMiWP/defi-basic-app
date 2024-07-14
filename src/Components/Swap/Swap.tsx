@@ -1,20 +1,14 @@
 import { Box, Button, Center, Text } from "@chakra-ui/react";
 
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { useEffect, useState } from "react";
-import getPriceFeed from "../../hooks/getPriceFeed";
+import { useEffect, useMemo, useState } from "react";
+import { getPriceFeed, approve } from "../../hooks/getPriceFeed";
 import InputComponent from "./InputComponent";
 
 import { pairs } from "../../interfaces/Pair";
+import tokens from "../../data/tokens";
 
-const baseCurrencySet: Set<string> = new Set(
-  pairs.map((pair) => pair.baseCurrency)
-);
-const destinationCurrencySet: Set<string> = new Set(
-  pairs.map((pair) => pair.destinationCurrency)
-);
-const baseCurrencyList: string[] = Array.from(baseCurrencySet);
-const destinationCurrencyList: string[] = Array.from(destinationCurrencySet);
+const tickers: string[] = Object.keys(tokens);
 
 const Swap = () => {
   const [priceFeed, setPriceFeed] = useState<string | null>(null);
@@ -22,6 +16,14 @@ const Swap = () => {
   const [destinationCurrency, setDestinationCurrency] = useState<string | null>(
     null
   );
+
+  const buyTickers: string[] = useMemo(() => {
+    return tickers.filter((key) => key != destinationCurrency);
+  }, [destinationCurrency]);
+
+  const sellTickers: string[] = useMemo(() => {
+    return tickers.filter((key) => key != baseCurrency);
+  }, [baseCurrency]);
 
   useEffect(() => {
     const fetchPriceFeed = async () => {
@@ -51,7 +53,7 @@ const Swap = () => {
       <InputComponent
         inputTitle="Sell"
         marginTop={4}
-        tokens={baseCurrencyList}
+        tokens={buyTickers}
         selectedInput={baseCurrency}
         setSelectedInput={setBaseCurrency}
       />
@@ -63,7 +65,7 @@ const Swap = () => {
       <InputComponent
         inputTitle="Buy"
         marginTop={1}
-        tokens={destinationCurrencyList}
+        tokens={sellTickers}
         selectedInput={destinationCurrency}
         setSelectedInput={setDestinationCurrency}
       />
@@ -75,6 +77,9 @@ const Swap = () => {
           justifyContent="center"
           height="50px"
           borderRadius={12}
+          onClick={() => {
+            // approve(tokens[baseCurrency],)
+          }}
         >
           <Text fontSize="sm" padding={4}>
             Approve
