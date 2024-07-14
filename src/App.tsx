@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { ChakraProvider, Text } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import NavigationBar from "./Components/NavigationBar";
 import Swap from "./Components/Swap/Swap";
 
