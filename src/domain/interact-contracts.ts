@@ -507,15 +507,26 @@ export const swapTokens = async (
   console.log("Swap Transaction Response:", txResponse);
 };
 
-export const hasApproved = async (tokenTicker: string) => {
+export const hasApproved = async (
+  tokenTicker: string,
+  swappingAmount: string
+) => {
+  if (swappingAmount == "") {
+    return false;
+  }
   const walletAddress = await wallet.getAddress();
   const tokenContract = new ethers.Contract(
     tokens[tokenTicker],
     erc20ABI,
     provider
   );
-  const amount: bigint = await tokenContract.allowance(walletAddress, address);
-  return amount > 0;
+  const allowances: bigint = await tokenContract.allowance(
+    walletAddress,
+    address
+  );
+  const amount: bigint = ethers.utils.parseEther(swappingAmount).toBigInt();
+  console.log("Allowances:", ethers.utils.formatUnits(allowances, "ether"));
+  return allowances > amount;
 };
 
 export const subscribeToApprovalEvent = (

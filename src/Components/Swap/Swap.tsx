@@ -45,7 +45,10 @@ const Swap = () => {
     if (!sellAmountInput) {
       return;
     }
-    const isApproved: boolean = await hasApproved(baseCurrency);
+    const isApproved: boolean = await hasApproved(
+      baseCurrency,
+      sellAmountInput
+    );
     if (isApproved) {
       if (!destinationCurrency) {
         return;
@@ -60,9 +63,12 @@ const Swap = () => {
     if (!baseCurrency) {
       return;
     }
-    const isApproved: boolean = await hasApproved(baseCurrency);
+    const isApproved: boolean = await hasApproved(
+      baseCurrency,
+      sellAmountInput
+    );
     setActionText(isApproved ? "Swap" : "Approve");
-  }, [baseCurrency]);
+  }, [baseCurrency, sellAmountInput]);
 
   useEffect(() => {
     if (!priceFeed) {
@@ -76,7 +82,7 @@ const Swap = () => {
       setBuyAmountOutput(buyOutput as string);
     } else if (lastUpdated === "buy") {
       if (buyAmountOutput == "0" || buyAmountOutput == "") {
-        setSellAmountInput("0");
+        setSellAmountInput("");
         return;
       }
       const sellInput = calculateSellInput(
