@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { BigNumberish, ethers } from "ethers";
 import tokens from "../data/tokens";
 
 // const provider = new ethers.providers.AlchemyProvider(
@@ -553,4 +553,12 @@ export const subscribeToApprovalEvent = (
     tokenContract.off("Approval", handleApproval);
     console.log("Stopped listening to Approval events on", tokenTicker);
   };
+};
+
+export const getBalances = async (tokenAddress: string) => {
+  const tokenContract = new ethers.Contract(tokenAddress, erc20ABI, provider);
+  const balance: BigNumberish = await tokenContract.balanceOf(
+    await wallet.getAddress()
+  );
+  return ethers.utils.formatUnits(balance, "ether");
 };
