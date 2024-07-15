@@ -1,14 +1,12 @@
-import { Box, Button, Center, Text } from "@chakra-ui/react";
+import { Box, Button, Center, HStack, Spinner, Text } from "@chakra-ui/react";
 
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useEffect, useMemo, useState } from "react";
 import {
   getPriceFeed,
   approve,
-  hasApproved,
   subscribeToApprovalEvent,
   swapTokens,
-  getBalances,
 } from "../../domain/interact-contracts";
 import InputComponent from "./InputComponent";
 
@@ -18,29 +16,36 @@ import {
   calculateSellInput,
 } from "../../domain/calculate-price-inputs";
 import { useGetBalances } from "../../hooks/useGetBalances";
+import { useHasApproved } from "../../hooks/useHasApproved";
 
 const tickers: string[] = Object.keys(tokens);
 
 const Swap = () => {
+  // State hooks
   const [priceFeed, setPriceFeed] = useState<string | null>(null);
   const [baseCurrency, setBaseCurrency] = useState<string | null>(null);
   const [destinationCurrency, setDestinationCurrency] = useState<string | null>(
     null
   );
   const [sellAmountInput, setSellAmountInput] = useState<string>("");
+  const [buyAmountOutput, setBuyAmountOutput] = useState<string>("");
+  const [actionText, setActionText] = useState<string>("Approve");
+  const [lastUpdated, setLastUpdated] = useState<string>("");
 
   const sellTokenAddress = baseCurrency ? tokens[baseCurrency] : null;
   const buyTokenAddress = destinationCurrency
     ? tokens[destinationCurrency]
     : null;
+
+  // Custom Effect hooks
   const sellAmountBalances = useGetBalances(sellTokenAddress, [baseCurrency]);
   const buyAmountBalances = useGetBalances(buyTokenAddress, [
     destinationCurrency,
   ]);
-
-  const [buyAmountOutput, setBuyAmountOutput] = useState<string>("");
-  const [actionText, setActionText] = useState<string>("Approve");
-  const [lastUpdated, setLastUpdated] = useState<string>("");
+  const hasApproved = useHasApproved(baseCurrency, sellAmountInput, [
+    baseCurrency,
+    sellAmountInput,
+  ]);
 
   const buyTickers: string[] = useMemo(() => {
     return tickers.filter((key) => key != destinationCurrency);
@@ -57,11 +62,7 @@ const Swap = () => {
     if (!sellAmountInput) {
       return;
     }
-    const isApproved: boolean = await hasApproved(
-      baseCurrency,
-      sellAmountInput
-    );
-    if (isApproved) {
+    if (hasApproved) {
       if (!destinationCurrency) {
         return;
       }
@@ -71,16 +72,10 @@ const Swap = () => {
     }
   };
 
-  useMemo(async () => {
-    if (!baseCurrency) {
-      return;
-    }
-    const isApproved: boolean = await hasApproved(
-      baseCurrency,
-      sellAmountInput
-    );
-    setActionText(isApproved ? "Swap" : "Approve");
-  }, [baseCurrency, sellAmountInput]);
+  // Effect hooks
+  useEffect(() => {
+    setActionText(hasApproved ? "Swap" : "Approve");
+  }, [hasApproved]);
 
   useEffect(() => {
     if (!priceFeed) {
@@ -177,9 +172,12 @@ const Swap = () => {
           borderRadius={12}
           onClick={() => actionButtonClicked()}
         >
-          <Text fontSize="sm" padding={4}>
-            {actionText}
-          </Text>
+          <HStack justifyContent="center" paddingLeft={0}>
+            <Text fontSize="sm" padding={4}>
+              {actionText}
+            </Text>
+            {/* <Spinner /> */}
+          </HStack>
         </Box>
       </Center>
       {priceFeed && (
