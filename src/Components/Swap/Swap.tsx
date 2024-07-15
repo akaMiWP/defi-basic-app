@@ -8,6 +8,7 @@ import {
   hasApproved,
   subscribeToApprovalEvent,
   swapTokens,
+  getBalances,
 } from "../../domain/interact-contracts";
 import InputComponent from "./InputComponent";
 
@@ -26,6 +27,12 @@ const Swap = () => {
     null
   );
   const [sellAmountInput, setSellAmountInput] = useState<string>("");
+  const [sellAmountBalances, setSellAmountBalances] = useState<string | null>(
+    null
+  );
+  const [buyAmountBalances, setBuyAmountBalances] = useState<string | null>(
+    null
+  );
   const [buyAmountOutput, setBuyAmountOutput] = useState<string>("");
   const [actionText, setActionText] = useState<string>("Approve");
   const [lastUpdated, setLastUpdated] = useState<string>("");
@@ -107,7 +114,6 @@ const Swap = () => {
         }
       }
     };
-
     fetchPriceFeed();
   }, [baseCurrency, destinationCurrency]);
 
@@ -117,6 +123,30 @@ const Swap = () => {
     }
     return subscribeToApprovalEvent(baseCurrency, setActionText);
   }, [baseCurrency]);
+
+  useEffect(() => {
+    if (!baseCurrency) {
+      return;
+    }
+    const _getBalances = async () => {
+      const balances = await getBalances(tokens[baseCurrency]);
+      setSellAmountBalances(balances);
+    };
+
+    _getBalances();
+  }, [baseCurrency]);
+
+  useEffect(() => {
+    if (!destinationCurrency) {
+      return;
+    }
+    const _getBalances = async () => {
+      const balances = await getBalances(tokens[destinationCurrency]);
+      setBuyAmountBalances(balances);
+    };
+
+    _getBalances();
+  }, [destinationCurrency]);
 
   return (
     <>
@@ -136,6 +166,7 @@ const Swap = () => {
         setInput={setSellAmountInput}
         setLastUpdated={setLastUpdated}
         isSelling={true}
+        balances={sellAmountBalances}
       />
       <Center>
         <Box as="button" boxSize={12}>
@@ -153,6 +184,7 @@ const Swap = () => {
         setInput={setBuyAmountOutput}
         setLastUpdated={setLastUpdated}
         isSelling={false}
+        balances={buyAmountBalances}
       />
       <Center marginTop={6}>
         <Box

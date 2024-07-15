@@ -24,6 +24,7 @@ interface Props {
   setInput: (input: string) => void;
   setLastUpdated: (input: string) => void;
   isSelling: boolean;
+  balances: string | null;
 }
 
 const InputComponent = ({
@@ -37,6 +38,7 @@ const InputComponent = ({
   setInput,
   setLastUpdated,
   isSelling,
+  balances,
 }: Props) => {
   const handleChange = (event) => {
     setInput(event.target.value);
@@ -80,6 +82,16 @@ const InputComponent = ({
             </MenuList>
           </Menu>
         </Flex>
+        {balances && (
+          <Text
+            fontSize="xs"
+            textColor="gray.400"
+            paddingLeft={4}
+            paddingTop={1}
+          >
+            Balances: {balances}
+          </Text>
+        )}
       </Box>
     </Center>
   );
