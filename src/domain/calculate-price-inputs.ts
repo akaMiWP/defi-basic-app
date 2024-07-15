@@ -8,6 +8,6 @@ export const calculateBuyOutput = (sell: string, priceFeedInEther: string) => {
 export const calculateSellInput = (buy: string, priceFeedInEther: string) => {
   const priceFeed = Number(priceFeedInEther);
   const buyOutput = Number(buy);
-  const sellInput = priceFeed * (1 / buyOutput);
+  const sellInput = buyOutput * (1 / priceFeed);
   return sellInput.toString();
 };
