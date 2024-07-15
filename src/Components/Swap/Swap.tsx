@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from "react";
 import {
   getPriceFeed,
   approve,
-  subscribeToApprovalEvent,
   swapTokens,
 } from "../../domain/interact-contracts";
 import InputComponent from "./InputComponent";
@@ -17,6 +16,7 @@ import {
 } from "../../domain/calculate-price-inputs";
 import { useGetBalances } from "../../hooks/useGetBalances";
 import { useHasApproved } from "../../hooks/useHasApproved";
+import { useSubscribeToApprovalEvent } from "../../hooks/useSubscribeToApprovalEvent";
 
 const tickers: string[] = Object.keys(tokens);
 
@@ -46,6 +46,7 @@ const Swap = () => {
     baseCurrency,
     sellAmountInput,
   ]);
+  useSubscribeToApprovalEvent(baseCurrency, setActionText, [baseCurrency]);
 
   const buyTickers: string[] = useMemo(() => {
     return tickers.filter((key) => key != destinationCurrency);
@@ -116,13 +117,6 @@ const Swap = () => {
     };
     fetchPriceFeed();
   }, [baseCurrency, destinationCurrency]);
-
-  useEffect(() => {
-    if (!baseCurrency) {
-      return;
-    }
-    return subscribeToApprovalEvent(baseCurrency, setActionText);
-  }, [baseCurrency]);
 
   return (
     <>
