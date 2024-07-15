@@ -17,6 +17,7 @@ import {
   calculateBuyOutput,
   calculateSellInput,
 } from "../../domain/calculate-price-inputs";
+import { useGetBalances } from "../../hooks/useGetBalances";
 
 const tickers: string[] = Object.keys(tokens);
 
@@ -27,12 +28,16 @@ const Swap = () => {
     null
   );
   const [sellAmountInput, setSellAmountInput] = useState<string>("");
-  const [sellAmountBalances, setSellAmountBalances] = useState<string | null>(
-    null
-  );
-  const [buyAmountBalances, setBuyAmountBalances] = useState<string | null>(
-    null
-  );
+
+  const sellTokenAddress = baseCurrency ? tokens[baseCurrency] : null;
+  const buyTokenAddress = destinationCurrency
+    ? tokens[destinationCurrency]
+    : null;
+  const sellAmountBalances = useGetBalances(sellTokenAddress, [baseCurrency]);
+  const buyAmountBalances = useGetBalances(buyTokenAddress, [
+    destinationCurrency,
+  ]);
+
   const [buyAmountOutput, setBuyAmountOutput] = useState<string>("");
   const [actionText, setActionText] = useState<string>("Approve");
   const [lastUpdated, setLastUpdated] = useState<string>("");
@@ -123,30 +128,6 @@ const Swap = () => {
     }
     return subscribeToApprovalEvent(baseCurrency, setActionText);
   }, [baseCurrency]);
-
-  useEffect(() => {
-    if (!baseCurrency) {
-      return;
-    }
-    const _getBalances = async () => {
-      const balances = await getBalances(tokens[baseCurrency]);
-      setSellAmountBalances(balances);
-    };
-
-    _getBalances();
-  }, [baseCurrency]);
-
-  useEffect(() => {
-    if (!destinationCurrency) {
-      return;
-    }
-    const _getBalances = async () => {
-      const balances = await getBalances(tokens[destinationCurrency]);
-      setBuyAmountBalances(balances);
-    };
-
-    _getBalances();
-  }, [destinationCurrency]);
 
   return (
     <>
