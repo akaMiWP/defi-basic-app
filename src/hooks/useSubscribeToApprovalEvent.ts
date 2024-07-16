@@ -2,10 +2,12 @@ import { ethers } from "ethers";
 import { useEffect } from "react";
 import tokens from "../data/tokens";
 import { erc20ABI, provider } from "../domain/ContractSetup";
+import { TransactionState } from "../domain/TransactionState";
 
 export const useSubscribeToApprovalEvent = (
   tokenTicker: string | null,
   setActionText: (actionText: string) => void,
+  setTransactonState: (state: TransactionState) => void,
   deps: unknown[]
 ) => {
   useEffect(() => {
@@ -27,6 +29,7 @@ export const useSubscribeToApprovalEvent = (
         console.log(
           `Approval event detected: Owner ${owner}, Spender ${spender}, Value ${value.toString()}`
         );
+        setTransactonState(TransactionState.confirmed);
         setActionText("Swap");
       };
 

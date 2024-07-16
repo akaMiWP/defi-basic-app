@@ -1,4 +1,12 @@
-import { Box, Button, Center, HStack, Spinner, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  HStack,
+  Spinner,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useEffect, useMemo, useState } from "react";
@@ -15,6 +23,8 @@ import { useSubscribeToApprovalEvent } from "../../hooks/useSubscribeToApprovalE
 import { useGetPriceFeed } from "../../hooks/useGetPriceFeed";
 import { useApprove } from "../../hooks/useApprove";
 import { useSwap } from "../../hooks/useSwap";
+import { BlockConfirmLoadingDialog } from "./BlockConfirmLoadingDialog";
+import { TransactionState } from "../../domain/TransactionState";
 
 const tickers: string[] = Object.keys(tokens);
 
@@ -32,6 +42,10 @@ const Swap = () => {
   const [didClickApproveButton, setDidClickApproveButton] =
     useState<boolean>(false);
   const [didClickSwapButton, setDidClickSwapButton] = useState<boolean>(false);
+  const [transactionState, setTransactonState] = useState<TransactionState>(
+    TransactionState.idle
+  );
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const sellTokenAddress = baseCurrency ? tokens[baseCurrency] : null;
   const buyTokenAddress = destinationCurrency
@@ -46,24 +60,29 @@ const Swap = () => {
   const hasApproved = useHasApproved(baseCurrency, sellAmountInput, [
     baseCurrency,
     sellAmountInput,
+    transactionState,
   ]);
   const getPriceFeed = useGetPriceFeed(baseCurrency, destinationCurrency, [
     baseCurrency,
     destinationCurrency,
   ]);
-  useSubscribeToApprovalEvent(baseCurrency, setActionText, [baseCurrency]);
+  useSubscribeToApprovalEvent(baseCurrency, setActionText, setTransactonState, [
+    baseCurrency,
+  ]);
   useApprove(
     sellTokenAddress,
     sellAmountInput,
     setDidClickApproveButton,
-    didClickApproveButton
+    didClickApproveButton,
+    setTransactonState
   );
   useSwap(
     baseCurrency,
     destinationCurrency,
     sellAmountInput,
     setDidClickSwapButton,
-    didClickSwapButton
+    didClickSwapButton,
+    setTransactonState
   );
 
   const buyTickers: string[] = useMemo(() => {
@@ -85,8 +104,10 @@ const Swap = () => {
       if (!destinationCurrency) {
         return;
       }
+      console.log("Swapping");
       setDidClickSwapButton(true);
     } else {
+      console.log("Approving");
       setDidClickApproveButton(true);
     }
   };
@@ -124,6 +145,21 @@ const Swap = () => {
       setPriceFeed(getPriceFeed);
     }
   }, [getPriceFeed]);
+
+  useEffect(() => {
+    if (transactionState == TransactionState.idle) {
+      onClose();
+      return;
+    }
+    if (transactionState == TransactionState.confirming) {
+      onOpen();
+      return;
+    }
+    if (transactionState == TransactionState.confirmed) {
+      onOpen();
+      return;
+    }
+  }, [transactionState]);
 
   return (
     <>
@@ -193,6 +229,12 @@ const Swap = () => {
           </Text>
         </Center>
       )}
+      <BlockConfirmLoadingDialog
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onClose={onClose}
+        transactionState={transactionState}
+      />
     </>
   );
 };

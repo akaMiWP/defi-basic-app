@@ -27,7 +27,7 @@ export const useHasApproved = (
       );
       const amount: bigint = ethers.utils.parseEther(swappingAmount).toBigInt();
       console.log("Allowances:", ethers.utils.formatUnits(allowances, "ether"));
-      setHasApproved(allowances > amount);
+      setHasApproved(allowances >= amount);
     };
 
     if (!tokenTicker) {

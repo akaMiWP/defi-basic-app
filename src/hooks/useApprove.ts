@@ -1,12 +1,14 @@
 import { ethers } from "ethers";
 import { useEffect } from "react";
 import { erc20ABI, wallet, address } from "../domain/ContractSetup";
+import { TransactionState } from "../domain/TransactionState";
 
 export const useApprove = (
   tokenAddress: string | null,
   input: string | null,
   closure: (state: boolean) => void,
-  showAllowApprove: boolean
+  showAllowApprove: boolean,
+  setTransactonState: (state: TransactionState) => void
 ) => {
   useEffect(() => {
     const approve = async (tokenAddress: string, input: string) => {
@@ -15,6 +17,7 @@ export const useApprove = (
       const amount = ethers.utils.parseEther(input);
       const txResponse = await tokenContract.approve(address, amount);
       console.log("Approve Trasanction Response:", txResponse);
+      setTransactonState(TransactionState.confirming);
     };
 
     if (tokenAddress && input && showAllowApprove) {
