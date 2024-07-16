@@ -2,11 +2,7 @@ import { Box, Button, Center, HStack, Spinner, Text } from "@chakra-ui/react";
 
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useEffect, useMemo, useState } from "react";
-import {
-  getPriceFeed,
-  approve,
-  swapTokens,
-} from "../../domain/interact-contracts";
+import { approve, swapTokens } from "../../domain/interact-contracts";
 import InputComponent from "./InputComponent";
 
 import tokens from "../../data/tokens";
@@ -17,6 +13,7 @@ import {
 import { useGetBalances } from "../../hooks/useGetBalances";
 import { useHasApproved } from "../../hooks/useHasApproved";
 import { useSubscribeToApprovalEvent } from "../../hooks/useSubscribeToApprovalEvent";
+import { useGetPriceFeed } from "../../hooks/useGetPriceFeed";
 
 const tickers: string[] = Object.keys(tokens);
 
@@ -45,6 +42,10 @@ const Swap = () => {
   const hasApproved = useHasApproved(baseCurrency, sellAmountInput, [
     baseCurrency,
     sellAmountInput,
+  ]);
+  const getPriceFeed = useGetPriceFeed(baseCurrency, destinationCurrency, [
+    baseCurrency,
+    destinationCurrency,
   ]);
   useSubscribeToApprovalEvent(baseCurrency, setActionText, [baseCurrency]);
 
@@ -102,21 +103,10 @@ const Swap = () => {
   }, [sellAmountInput, buyAmountOutput, priceFeed, lastUpdated]);
 
   useEffect(() => {
-    const fetchPriceFeed = async () => {
-      if (baseCurrency && destinationCurrency && getPriceFeed) {
-        try {
-          const price = await getPriceFeed(baseCurrency, destinationCurrency);
-          if (price != undefined) {
-            setPriceFeed(price);
-          }
-        } catch (err) {
-          console.log(err);
-          setPriceFeed(null);
-        }
-      }
-    };
-    fetchPriceFeed();
-  }, [baseCurrency, destinationCurrency]);
+    if (getPriceFeed != undefined) {
+      setPriceFeed(getPriceFeed);
+    }
+  }, [getPriceFeed]);
 
   return (
     <>

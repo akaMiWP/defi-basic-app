@@ -467,24 +467,6 @@ const erc20ABI = [
 
 const dexContract = new ethers.Contract(address, dexABI, wallet);
 
-export async function getPriceFeed(
-  sellTokenTicker: string,
-  buyTokenTicker: string
-) {
-  try {
-    const priceFeedInBigInt: number = await dexContract.getPriceFeedFromPair(
-      tokens[sellTokenTicker],
-      tokens[buyTokenTicker]
-    );
-
-    const price = ethers.utils.formatEther(priceFeedInBigInt);
-    console.log(sellTokenTicker, "/", buyTokenTicker, price, priceFeedInBigInt);
-    return price;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 export const approve = async (tokenAddress: string, input: string) => {
   console.log("Waiting for approve");
   const tokenContract = new ethers.Contract(tokenAddress, erc20ABI, wallet);
