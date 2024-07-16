@@ -125,11 +125,6 @@ const Swap = () => {
     }
   }, [getPriceFeed]);
 
-  // useEffect(() => {
-  //   setDidClickSwapButton(false);
-  //   setDidClickApproveButton(false);
-  // }, [baseCurrency, destinationCurrency]);
-
   return (
     <>
       <Center marginTop={16}>
