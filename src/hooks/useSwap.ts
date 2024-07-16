@@ -7,7 +7,8 @@ export const useSwap = (
   token1: string | null,
   token2: string | null,
   token3: string | null,
-  deps: unknown[]
+  closure: (state: boolean) => void,
+  showAllowApprove: boolean
 ) => {
   useEffect(() => {
     const swapTokens = async (
@@ -25,8 +26,9 @@ export const useSwap = (
       console.log("Swap Transaction Response:", txResponse);
     };
 
-    if (token1 && token2 && token3) {
+    if (token1 && token2 && token3 && showAllowApprove) {
       swapTokens(token1, token2, token3);
+      closure(false);
     }
-  }, [...deps]);
+  }, [showAllowApprove]);
 };

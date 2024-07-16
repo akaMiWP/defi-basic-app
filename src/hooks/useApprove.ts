@@ -5,7 +5,8 @@ import { erc20ABI, wallet, address } from "../domain/ContractSetup";
 export const useApprove = (
   tokenAddress: string | null,
   input: string | null,
-  deps: unknown[]
+  closure: (state: boolean) => void,
+  showAllowApprove: boolean
 ) => {
   useEffect(() => {
     const approve = async (tokenAddress: string, input: string) => {
@@ -16,8 +17,9 @@ export const useApprove = (
       console.log("Approve Trasanction Response:", txResponse);
     };
 
-    if (tokenAddress && input) {
+    if (tokenAddress && input && showAllowApprove) {
       approve(tokenAddress, input);
+      closure(false);
     }
-  }, [...deps]);
+  }, [showAllowApprove]);
 };

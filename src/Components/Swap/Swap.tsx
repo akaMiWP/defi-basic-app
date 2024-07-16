@@ -2,7 +2,6 @@ import { Box, Button, Center, HStack, Spinner, Text } from "@chakra-ui/react";
 
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useEffect, useMemo, useState } from "react";
-import { swapTokens } from "../../domain/interact-contracts";
 import InputComponent from "./InputComponent";
 
 import tokens from "../../data/tokens";
@@ -15,6 +14,7 @@ import { useHasApproved } from "../../hooks/useHasApproved";
 import { useSubscribeToApprovalEvent } from "../../hooks/useSubscribeToApprovalEvent";
 import { useGetPriceFeed } from "../../hooks/useGetPriceFeed";
 import { useApprove } from "../../hooks/useApprove";
+import { useSwap } from "../../hooks/useSwap";
 
 const tickers: string[] = Object.keys(tokens);
 
@@ -31,6 +31,7 @@ const Swap = () => {
   const [lastUpdated, setLastUpdated] = useState<string>("");
   const [didClickApproveButton, setDidClickApproveButton] =
     useState<boolean>(false);
+  const [didClickSwapButton, setDidClickSwapButton] = useState<boolean>(false);
 
   const sellTokenAddress = baseCurrency ? tokens[baseCurrency] : null;
   const buyTokenAddress = destinationCurrency
@@ -51,7 +52,19 @@ const Swap = () => {
     destinationCurrency,
   ]);
   useSubscribeToApprovalEvent(baseCurrency, setActionText, [baseCurrency]);
-  useApprove(sellTokenAddress, sellAmountInput, [didClickApproveButton]);
+  useApprove(
+    sellTokenAddress,
+    sellAmountInput,
+    setDidClickApproveButton,
+    didClickApproveButton
+  );
+  useSwap(
+    baseCurrency,
+    destinationCurrency,
+    sellAmountInput,
+    setDidClickSwapButton,
+    didClickSwapButton
+  );
 
   const buyTickers: string[] = useMemo(() => {
     return tickers.filter((key) => key != destinationCurrency);
@@ -72,7 +85,7 @@ const Swap = () => {
       if (!destinationCurrency) {
         return;
       }
-      swapTokens(baseCurrency, destinationCurrency, sellAmountInput);
+      setDidClickSwapButton(true);
     } else {
       setDidClickApproveButton(true);
     }
@@ -112,9 +125,10 @@ const Swap = () => {
     }
   }, [getPriceFeed]);
 
-  useEffect(() => {
-    setDidClickApproveButton(false);
-  }, [baseCurrency, destinationCurrency]);
+  // useEffect(() => {
+  //   setDidClickSwapButton(false);
+  //   setDidClickApproveButton(false);
+  // }, [baseCurrency, destinationCurrency]);
 
   return (
     <>
