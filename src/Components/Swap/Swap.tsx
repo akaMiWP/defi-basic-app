@@ -2,7 +2,7 @@ import { Box, Button, Center, HStack, Spinner, Text } from "@chakra-ui/react";
 
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useEffect, useMemo, useState } from "react";
-import { approve, swapTokens } from "../../domain/interact-contracts";
+import { swapTokens } from "../../domain/interact-contracts";
 import InputComponent from "./InputComponent";
 
 import tokens from "../../data/tokens";
@@ -14,6 +14,7 @@ import { useGetBalances } from "../../hooks/useGetBalances";
 import { useHasApproved } from "../../hooks/useHasApproved";
 import { useSubscribeToApprovalEvent } from "../../hooks/useSubscribeToApprovalEvent";
 import { useGetPriceFeed } from "../../hooks/useGetPriceFeed";
+import { useApprove } from "../../hooks/useApprove";
 
 const tickers: string[] = Object.keys(tokens);
 
@@ -28,6 +29,8 @@ const Swap = () => {
   const [buyAmountOutput, setBuyAmountOutput] = useState<string>("");
   const [actionText, setActionText] = useState<string>("Approve");
   const [lastUpdated, setLastUpdated] = useState<string>("");
+  const [didClickApproveButton, setDidClickApproveButton] =
+    useState<boolean>(false);
 
   const sellTokenAddress = baseCurrency ? tokens[baseCurrency] : null;
   const buyTokenAddress = destinationCurrency
@@ -48,6 +51,7 @@ const Swap = () => {
     destinationCurrency,
   ]);
   useSubscribeToApprovalEvent(baseCurrency, setActionText, [baseCurrency]);
+  useApprove(sellTokenAddress, sellAmountInput, [didClickApproveButton]);
 
   const buyTickers: string[] = useMemo(() => {
     return tickers.filter((key) => key != destinationCurrency);
@@ -70,7 +74,7 @@ const Swap = () => {
       }
       swapTokens(baseCurrency, destinationCurrency, sellAmountInput);
     } else {
-      approve(tokens[baseCurrency], sellAmountInput);
+      setDidClickApproveButton(true);
     }
   };
 
@@ -107,6 +111,10 @@ const Swap = () => {
       setPriceFeed(getPriceFeed);
     }
   }, [getPriceFeed]);
+
+  useEffect(() => {
+    setDidClickApproveButton(false);
+  }, [baseCurrency, destinationCurrency]);
 
   return (
     <>
