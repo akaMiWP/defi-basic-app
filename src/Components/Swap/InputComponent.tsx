@@ -48,6 +48,7 @@ const InputComponent = ({
   };
 
   const bg = useColorModeValue("gray.200", "gray.700");
+  const textColor = useColorModeValue("gray.600", "gray.400");
 
   return (
     <Center marginTop={marginTop}>
@@ -88,7 +89,7 @@ const InputComponent = ({
         {balances && (
           <Text
             fontSize="xs"
-            textColor="gray.400"
+            textColor={textColor}
             paddingLeft={4}
             paddingTop={1}
           >

@@ -1,4 +1,4 @@
-import { Box, Button, HStack, Text } from "@chakra-ui/react";
+import { Box, Button, HStack, Text, useColorModeValue } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import truncateMiddle from "../Helpers/String+Ext";
 import { ethers } from "ethers";
@@ -17,17 +17,21 @@ const Account = () => {
     requestWeb3Account();
   }, []);
 
+  const textColor = useColorModeValue("gray.50", "gray.100");
+  const buttonConnectedTextColor = useColorModeValue("teal.300", "orange.200");
+  const buttonTextColor = useColorModeValue("orange.200", "teal.300");
+
   return (
     <>
       <Box>
         <HStack>
           {account && (
-            <Text marginRight={4} color="cyan.100">
+            <Text marginRight={4} color={textColor}>
               {truncateMiddle(account, 12)}
             </Text>
           )}
           <Button
-            color={account ? "orange.200" : "teal.400"}
+            color={account ? buttonConnectedTextColor : buttonTextColor}
             onClick={requestWeb3Account}
           >
             {account ? "Connected" : "Connect"}
