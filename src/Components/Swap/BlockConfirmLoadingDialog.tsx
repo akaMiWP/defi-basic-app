@@ -1,18 +1,14 @@
 import {
-  useDisclosure,
-  Button,
   AlertDialog,
   AlertDialogOverlay,
   AlertDialogContent,
   AlertDialogHeader,
   AlertDialogCloseButton,
   AlertDialogBody,
-  AlertDialogFooter,
   Spinner,
   Center,
   Icon,
 } from "@chakra-ui/react";
-import { Transaction } from "ethers";
 import { useEffect, useRef, useState } from "react";
 import { TransactionState } from "../../domain/TransactionState";
 import { CheckIcon } from "@chakra-ui/icons";
