@@ -19,14 +19,12 @@ import { CheckIcon } from "@chakra-ui/icons";
 
 interface Props {
   isOpen: boolean;
-  onOpen: () => void;
   onClose: () => void;
   transactionState: TransactionState;
 }
 
 export const BlockConfirmLoadingDialog = ({
   isOpen,
-  onOpen,
   onClose,
   transactionState,
 }: Props) => {

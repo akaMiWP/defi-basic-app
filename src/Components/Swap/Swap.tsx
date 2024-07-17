@@ -3,7 +3,6 @@ import {
   Button,
   Center,
   HStack,
-  Spinner,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -231,7 +230,6 @@ const Swap = () => {
       )}
       <BlockConfirmLoadingDialog
         isOpen={isOpen}
-        onOpen={onOpen}
         onClose={onClose}
         transactionState={transactionState}
       />
