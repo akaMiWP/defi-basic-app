@@ -18,8 +18,9 @@ const Account = () => {
   }, []);
 
   const textColor = useColorModeValue("gray.50", "gray.100");
-  const buttonConnectedTextColor = useColorModeValue("teal.300", "orange.200");
-  const buttonTextColor = useColorModeValue("orange.200", "teal.300");
+  const buttonBgColor = useColorModeValue("orange.100", "teal.100");
+  const buttonConnectedTextColor = useColorModeValue("gray.700", "gray.100");
+  const buttonConnectedBgColor = useColorModeValue("orange.100", "teal.400");
 
   return (
     <>
@@ -31,7 +32,8 @@ const Account = () => {
             </Text>
           )}
           <Button
-            color={account ? buttonConnectedTextColor : buttonTextColor}
+            bg={account ? buttonConnectedBgColor : buttonBgColor}
+            color={account ? buttonConnectedTextColor : "gray.900"}
             onClick={requestWeb3Account}
           >
             {account ? "Connected" : "Connect"}
