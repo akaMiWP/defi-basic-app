@@ -164,6 +164,7 @@ const Swap = () => {
   // Color
   const buttonColor = useColorModeValue("orange.300", "teal.500");
   const hoverButtonColor = useColorModeValue("teal.500", "orange.300");
+  const hoverTextButtonColor = useColorModeValue("gray.50", "gray.900");
 
   return (
     <>
@@ -210,6 +211,7 @@ const Swap = () => {
           bg={buttonColor}
           _hover={{
             bg: hoverButtonColor,
+            textColor: hoverTextButtonColor,
           }}
           justifyContent="center"
           height="50px"

@@ -8,6 +8,7 @@ import {
   Spinner,
   Center,
   Icon,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { TransactionState } from "../../domain/TransactionState";
@@ -25,6 +26,7 @@ export const BlockConfirmLoadingDialog = ({
   transactionState,
 }: Props) => {
   const [title, setTitle] = useState<string>("");
+  const spinnerColor = useColorModeValue("orange.400", "teal.600");
 
   useEffect(() => {
     if (transactionState == TransactionState.idle) {
@@ -65,7 +67,7 @@ export const BlockConfirmLoadingDialog = ({
                 thickness="4px"
                 speed="0.65s"
                 emptyColor="gray.200"
-                color="teal.600"
+                color={spinnerColor}
                 size="xl"
               />
             )}
