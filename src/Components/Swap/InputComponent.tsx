@@ -11,6 +11,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  useColorModeValue,
 } from "@chakra-ui/react";
 
 interface Props {
@@ -46,6 +47,8 @@ const InputComponent = ({
     setAmountInput && setAmountInput(event.target.value);
   };
 
+  const bg = useColorModeValue("gray.200", "gray.700");
+
   return (
     <Center marginTop={marginTop}>
       <Box
@@ -53,7 +56,7 @@ const InputComponent = ({
         justifyContent="center"
         height="125px"
         borderRadius={12}
-        bg="gray.700"
+        bg={bg}
       >
         <Text fontSize="sm" padding={4}>
           {inputTitle}

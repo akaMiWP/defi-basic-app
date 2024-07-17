@@ -4,6 +4,7 @@ import {
   Center,
   HStack,
   Text,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
 
@@ -160,6 +161,10 @@ const Swap = () => {
     }
   }, [transactionState]);
 
+  // Color
+  const buttonColor = useColorModeValue("orange.300", "teal.500");
+  const hoverButtonColor = useColorModeValue("teal.500", "orange.300");
+
   return (
     <>
       <Center marginTop={16}>
@@ -202,9 +207,9 @@ const Swap = () => {
         <Box
           as="button"
           w="30%"
-          bg="teal.500"
+          bg={buttonColor}
           _hover={{
-            bg: "orange.300",
+            bg: hoverButtonColor,
           }}
           justifyContent="center"
           height="50px"
