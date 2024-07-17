@@ -202,7 +202,10 @@ const Swap = () => {
         <Box
           as="button"
           w="30%"
-          bg="teal.600"
+          bg="teal.500"
+          _hover={{
+            bg: "orange.300",
+          }}
           justifyContent="center"
           height="50px"
           borderRadius={12}
@@ -212,7 +215,6 @@ const Swap = () => {
             <Text fontSize="sm" padding={4}>
               {actionText}
             </Text>
-            {/* <Spinner /> */}
           </HStack>
         </Box>
       </Center>

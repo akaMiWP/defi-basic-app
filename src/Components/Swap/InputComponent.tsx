@@ -50,10 +50,10 @@ const InputComponent = ({
     <Center marginTop={marginTop}>
       <Box
         w="30%"
-        bg="teal.900"
         justifyContent="center"
         height="125px"
         borderRadius={12}
+        bg="gray.700"
       >
         <Text fontSize="sm" padding={4}>
           {inputTitle}

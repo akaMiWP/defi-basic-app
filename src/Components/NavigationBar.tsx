@@ -10,7 +10,7 @@ const NavigationBar = () => {
       <HStack
         justifyContent={"space-between"}
         padding={4}
-        background="cyan.900"
+        bgGradient="linear(to-r, teal.900, teal.600)"
       >
         <HStack>
           <Image src={appIcon} boxSize="40px" />
