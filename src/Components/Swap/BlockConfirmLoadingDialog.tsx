@@ -39,12 +39,12 @@ export const BlockConfirmLoadingDialog = ({
       return;
     }
     if (transactionState == TransactionState.confirming) {
-      setTitle("Approving.....");
+      setTitle("Submitting your transaction..");
       isOpen = true;
       return;
     }
     if (transactionState == TransactionState.confirmed) {
-      setTitle("Completed !");
+      setTitle("Completed");
       isOpen = true;
       return;
     }
