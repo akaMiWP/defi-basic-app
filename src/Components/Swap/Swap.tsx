@@ -115,11 +115,13 @@ const Swap = () => {
 
   const isUserInteractionEnabled: boolean | undefined = useMemo(() => {
     switch (swapButtonState) {
-      case (SwapButtonState.needAmountInput,
-      SwapButtonState.needTokenSelection,
+      case (SwapButtonState.needTokenSelection,
+      SwapButtonState.needAmountInput,
       SwapButtonState.insufficientBalance):
         return false;
-      case (SwapButtonState.needApprove, SwapButtonState.needSwap):
+      case SwapButtonState.needApprove:
+        return true;
+      case SwapButtonState.needSwap:
         return true;
     }
   }, [swapButtonState]);
