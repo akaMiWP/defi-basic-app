@@ -100,6 +100,16 @@ const Swap = () => {
     return tickers.filter((key) => key != baseCurrency);
   }, [baseCurrency]);
 
+  const isUserInteractionEnabled: boolean = useMemo(() => {
+    switch (swapButtonState) {
+      case (SwapButtonState.needAmountInput,
+      SwapButtonState.needTokenSelection):
+        return false;
+      case (SwapButtonState.needApprove, SwapButtonState.needSwap):
+        return true;
+    }
+  }, [swapButtonState]);
+
   const actionButtonClicked = async () => {
     if (!baseCurrency) {
       return;
@@ -244,6 +254,7 @@ const Swap = () => {
           height="50px"
           borderRadius={12}
           boxShadow="xl"
+          disabled={isUserInteractionEnabled}
           onClick={() => actionButtonClicked()}
         >
           <HStack justifyContent="center" paddingLeft={0}>
