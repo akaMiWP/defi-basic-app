@@ -35,6 +35,7 @@ const Account = () => {
             bg={account ? buttonConnectedBgColor : buttonBgColor}
             color={account ? buttonConnectedTextColor : "gray.900"}
             onClick={requestWeb3Account}
+            boxShadow="xl"
           >
             {account ? "Connected" : "Connect"}
           </Button>

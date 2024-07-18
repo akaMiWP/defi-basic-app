@@ -216,6 +216,7 @@ const Swap = () => {
           justifyContent="center"
           height="50px"
           borderRadius={12}
+          boxShadow="xl"
           onClick={() => actionButtonClicked()}
         >
           <HStack justifyContent="center" paddingLeft={0}>

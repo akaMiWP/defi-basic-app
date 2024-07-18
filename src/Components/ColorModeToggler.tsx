@@ -5,7 +5,7 @@ const ColorModeToggler = () => {
 
   return (
     <header>
-      <Button onClick={toggleColorMode}>
+      <Button onClick={toggleColorMode} boxShadow="xl">
         Toggle {colorMode === "light" ? "Dark" : "Light"}
       </Button>
     </header>

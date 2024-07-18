@@ -58,6 +58,7 @@ const InputComponent = ({
         height="125px"
         borderRadius={12}
         bg={bg}
+        boxShadow="md"
       >
         <Text fontSize="sm" padding={4}>
           {inputTitle}
@@ -72,7 +73,11 @@ const InputComponent = ({
           />
           <Spacer />
           <Menu>
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+            <MenuButton
+              as={Button}
+              rightIcon={<ChevronDownIcon />}
+              boxShadow="xl"
+            >
               {selectedInput}
             </MenuButton>
             <MenuList>
