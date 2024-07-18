@@ -61,10 +61,10 @@ const Swap = () => {
   const buyAmountBalances = useGetBalances(buyTokenAddress, [
     destinationCurrency,
   ]);
-  const hasApproved = useHasApproved(baseCurrency, sellAmountInput, [
+  useHasApproved(baseCurrency, sellAmountInput, setSwapButtonState, [
     baseCurrency,
     sellAmountInput,
-    transactionState,
+    transactionState, //TODO: This seems to be unrelated
   ]);
   const getPriceFeed = useGetPriceFeed(baseCurrency, destinationCurrency, [
     baseCurrency,
@@ -107,15 +107,21 @@ const Swap = () => {
     if (!sellAmountInput) {
       return;
     }
-    if (hasApproved) {
-      if (!destinationCurrency) {
+
+    switch (swapButtonState) {
+      case SwapButtonState.needSwap:
+        if (!destinationCurrency) {
+          return;
+        }
+        console.log("Swapping");
+        setDidClickSwapButton(true);
         return;
-      }
-      console.log("Swapping");
-      setDidClickSwapButton(true);
-    } else {
-      console.log("Approving");
-      setDidClickApproveButton(true);
+      case SwapButtonState.needApprove:
+        console.log("Approving");
+        setDidClickApproveButton(true);
+        return;
+      default:
+        return;
     }
   };
 
@@ -137,14 +143,6 @@ const Swap = () => {
         return;
     }
   }, [swapButtonState]);
-
-  useEffect(() => {
-    if (hasApproved) {
-      setSwapButtonState(SwapButtonState.needSwap);
-    } else {
-      setSwapButtonState(SwapButtonState.needApprove);
-    }
-  }, [hasApproved]);
 
   useEffect(() => {
     if (!priceFeed) {

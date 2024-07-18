@@ -1,19 +1,23 @@
 import { ethers } from "ethers";
 import tokens from "../data/tokens";
 import { wallet, erc20ABI, provider, address } from "../domain/ContractSetup";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { SwapButtonState } from "../domain/SwapButtonState";
 
 export const useHasApproved = (
   tokenTicker: string | null,
   swappingAmount: string,
+  setSwapButtonState: (state: SwapButtonState) => void,
   deps: unknown[]
 ) => {
-  const [hasApproved, setHasApproved] = useState<boolean>(false);
-
   useEffect(() => {
     const hasApproved = async (tokenTicker: string, swappingAmount: string) => {
+      if (tokenTicker == "") {
+        setSwapButtonState(SwapButtonState.needTokenSelection);
+      }
       if (swappingAmount == "") {
-        return false;
+        setSwapButtonState(SwapButtonState.needAmountInput);
+        return;
       }
       const walletAddress = await wallet.getAddress();
       const tokenContract = new ethers.Contract(
@@ -27,7 +31,11 @@ export const useHasApproved = (
       );
       const amount: bigint = ethers.utils.parseEther(swappingAmount).toBigInt();
       console.log("Allowances:", ethers.utils.formatUnits(allowances, "ether"));
-      setHasApproved(allowances >= amount);
+      if (allowances >= amount) {
+        setSwapButtonState(SwapButtonState.needSwap);
+      } else {
+        setSwapButtonState(SwapButtonState.needApprove);
+      }
     };
 
     if (!tokenTicker) {
@@ -36,6 +44,4 @@ export const useHasApproved = (
     console.log("useHasApproved");
     hasApproved(tokenTicker, swappingAmount);
   }, [...deps]);
-
-  return hasApproved;
 };
