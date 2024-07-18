@@ -16,7 +16,7 @@ import tokens from "../../data/tokens";
 import {
   calculateBuyOutput,
   calculateSellInput,
-} from "../../domain/calculate-price-inputs";
+} from "../../domain/CalculatePrice/";
 import { useGetBalances } from "../../hooks/useGetBalances";
 import { useHasApproved } from "../../hooks/useHasApproved";
 import { useSubscribeToApprovalEvent } from "../../hooks/useSubscribeToApprovalEvent";
@@ -61,11 +61,18 @@ const Swap = () => {
   const buyAmountBalances = useGetBalances(buyTokenAddress, [
     destinationCurrency,
   ]);
-  useHasApproved(baseCurrency, sellAmountInput, setSwapButtonState, [
+  useHasApproved(
     baseCurrency,
     sellAmountInput,
-    transactionState, //TODO: This seems to be unrelated
-  ]);
+    sellAmountBalances,
+    setSwapButtonState,
+    [
+      baseCurrency,
+      sellAmountInput,
+      sellAmountBalances,
+      transactionState, //TODO: This seems to be unrelated
+    ]
+  );
   const getPriceFeed = useGetPriceFeed(baseCurrency, destinationCurrency, [
     baseCurrency,
     destinationCurrency,
@@ -100,12 +107,14 @@ const Swap = () => {
     return tickers.filter((key) => key != baseCurrency);
   }, [baseCurrency]);
 
-  const isUserInteractionEnabled: boolean = useMemo(() => {
+  const isUserInteractionEnabled: boolean | undefined = useMemo(() => {
     switch (swapButtonState) {
       case (SwapButtonState.needAmountInput,
       SwapButtonState.needTokenSelection):
         return false;
-      case (SwapButtonState.needApprove, SwapButtonState.needSwap):
+      case (SwapButtonState.needApprove,
+      SwapButtonState.needSwap,
+      SwapButtonState.insufficientBalance):
         return true;
     }
   }, [swapButtonState]);
@@ -150,6 +159,9 @@ const Swap = () => {
         return;
       case SwapButtonState.needSwap:
         setActionText("Swap");
+        return;
+      case SwapButtonState.insufficientBalance:
+        setActionText("Insufficient Balance");
         return;
     }
   }, [swapButtonState]);

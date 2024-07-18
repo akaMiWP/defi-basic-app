@@ -3,10 +3,12 @@ import tokens from "../data/tokens";
 import { wallet, erc20ABI, provider, address } from "../domain/ContractSetup";
 import { useEffect } from "react";
 import { SwapButtonState } from "../domain/SwapButtonState";
+import { isBalancesMoreThanInput } from "../domain/CalculatePrice/";
 
 export const useHasApproved = (
   tokenTicker: string | null,
   swappingAmount: string,
+  balances: string | null,
   setSwapButtonState: (state: SwapButtonState) => void,
   deps: unknown[]
 ) => {
@@ -14,9 +16,17 @@ export const useHasApproved = (
     const hasApproved = async (tokenTicker: string, swappingAmount: string) => {
       if (tokenTicker == "") {
         setSwapButtonState(SwapButtonState.needTokenSelection);
+        return;
       }
       if (swappingAmount == "") {
         setSwapButtonState(SwapButtonState.needAmountInput);
+        return;
+      }
+      if (!balances) {
+        return;
+      }
+      if (!isBalancesMoreThanInput(balances, swappingAmount)) {
+        setSwapButtonState(SwapButtonState.insufficientBalance);
         return;
       }
       const walletAddress = await wallet.getAddress();

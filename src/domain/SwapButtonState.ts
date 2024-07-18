@@ -3,4 +3,5 @@ export enum SwapButtonState {
   needAmountInput,
   needApprove,
   needSwap,
+  insufficientBalance,
 }

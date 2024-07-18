@@ -11,3 +11,9 @@ export const calculateSellInput = (buy: string, priceFeedInEther: string) => {
   const sellInput = buyOutput * (1 / priceFeed);
   return sellInput.toString();
 };
+
+export const isBalancesMoreThanInput = (balances: string, input: string) => {
+  const amountBalances = Number(balances);
+  const amountInput = Number(input);
+  return amountBalances >= amountInput;
+};
