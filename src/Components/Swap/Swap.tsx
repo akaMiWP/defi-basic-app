@@ -115,9 +115,11 @@ const Swap = () => {
 
   const isUserInteractionEnabled: boolean | undefined = useMemo(() => {
     switch (swapButtonState) {
-      case (SwapButtonState.needTokenSelection,
-      SwapButtonState.needAmountInput,
-      SwapButtonState.insufficientBalance):
+      case SwapButtonState.needTokenSelection:
+        return false;
+      case SwapButtonState.needAmountInput:
+        return false;
+      case SwapButtonState.insufficientBalance:
         return false;
       case SwapButtonState.needApprove:
         return true;
@@ -216,6 +218,11 @@ const Swap = () => {
 
   // Color
   const inactiveButtonColor = useColorModeValue("gray.300", "gray.600");
+  const inactiveHoverButtonColor = useColorModeValue("gray.300", "gray.600");
+  const inactiveTextButtonColor = useColorModeValue(
+    "gray.800",
+    "whiteAlpha.900"
+  );
   const buttonColor = useColorModeValue("orange.300", "teal.500");
   const hoverButtonColor = useColorModeValue("teal.500", "orange.300");
   const hoverTextButtonColor = useColorModeValue("gray.50", "gray.900");
@@ -270,8 +277,8 @@ const Swap = () => {
                   textColor: hoverTextButtonColor,
                 }
               : {
-                  bg: "gray.300",
-                  textColor: "gray.600",
+                  bg: inactiveHoverButtonColor,
+                  textColor: inactiveTextButtonColor,
                 }
           }
           justifyContent="center"
