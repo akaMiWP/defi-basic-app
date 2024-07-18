@@ -25,6 +25,7 @@ import { useApprove } from "../../hooks/useApprove";
 import { useSwap } from "../../hooks/useSwap";
 import { BlockConfirmLoadingDialog } from "./BlockConfirmLoadingDialog";
 import { TransactionState } from "../../domain/TransactionState";
+import { SwapButtonState } from "../../domain/SwapButtonState";
 
 const tickers: string[] = Object.keys(tokens);
 
@@ -44,6 +45,9 @@ const Swap = () => {
   const [didClickSwapButton, setDidClickSwapButton] = useState<boolean>(false);
   const [transactionState, setTransactonState] = useState<TransactionState>(
     TransactionState.idle
+  );
+  const [swapButtonState, setSwapButtonState] = useState<SwapButtonState>(
+    SwapButtonState.needTokenSelection
   );
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -66,9 +70,12 @@ const Swap = () => {
     baseCurrency,
     destinationCurrency,
   ]);
-  useSubscribeToApprovalEvent(baseCurrency, setActionText, setTransactonState, [
+  useSubscribeToApprovalEvent(
     baseCurrency,
-  ]);
+    setSwapButtonState,
+    setTransactonState,
+    [baseCurrency]
+  );
   useApprove(
     sellTokenAddress,
     sellAmountInput,
@@ -114,7 +121,29 @@ const Swap = () => {
 
   // Effect hooks
   useEffect(() => {
-    setActionText(hasApproved ? "Swap" : "Approve");
+    console.log("SwapButtonState:", swapButtonState);
+    switch (swapButtonState) {
+      case SwapButtonState.needTokenSelection:
+        setActionText("Select a token");
+        return;
+      case SwapButtonState.needAmountInput:
+        setActionText("Enter an amount");
+        return;
+      case SwapButtonState.needApprove:
+        setActionText("Approve");
+        return;
+      case SwapButtonState.needSwap:
+        setActionText("Swap");
+        return;
+    }
+  }, [swapButtonState]);
+
+  useEffect(() => {
+    if (hasApproved) {
+      setSwapButtonState(SwapButtonState.needSwap);
+    } else {
+      setSwapButtonState(SwapButtonState.needApprove);
+    }
   }, [hasApproved]);
 
   useEffect(() => {

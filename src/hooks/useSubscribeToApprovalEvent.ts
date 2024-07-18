@@ -3,17 +3,18 @@ import { useEffect } from "react";
 import tokens from "../data/tokens";
 import { erc20ABI, provider } from "../domain/ContractSetup";
 import { TransactionState } from "../domain/TransactionState";
+import { SwapButtonState } from "../domain/SwapButtonState";
 
 export const useSubscribeToApprovalEvent = (
   tokenTicker: string | null,
-  setActionText: (actionText: string) => void,
+  setSwapButtonState: (state: SwapButtonState) => void,
   setTransactonState: (state: TransactionState) => void,
   deps: unknown[]
 ) => {
   useEffect(() => {
     const subscribeToApprovalEvent = (
       tokenTicker: string,
-      setActionText: (actionText: string) => void
+      setSwapButtonState: (state: SwapButtonState) => void
     ) => {
       const tokenContract = new ethers.Contract(
         tokens[tokenTicker],
@@ -30,7 +31,7 @@ export const useSubscribeToApprovalEvent = (
           `Approval event detected: Owner ${owner}, Spender ${spender}, Value ${value.toString()}`
         );
         setTransactonState(TransactionState.confirmed);
-        setActionText("Swap");
+        setSwapButtonState(SwapButtonState.needSwap);
       };
 
       console.log("Start listening to Approval events on", tokenTicker);
@@ -45,6 +46,6 @@ export const useSubscribeToApprovalEvent = (
     if (!tokenTicker) {
       return;
     }
-    return subscribeToApprovalEvent(tokenTicker, setActionText);
+    return subscribeToApprovalEvent(tokenTicker, setSwapButtonState);
   }, [...deps]);
 };
