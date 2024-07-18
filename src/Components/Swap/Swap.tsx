@@ -57,9 +57,13 @@ const Swap = () => {
     : null;
 
   // Custom Effect hooks
-  const sellAmountBalances = useGetBalances(sellTokenAddress, [baseCurrency]);
+  const sellAmountBalances = useGetBalances(sellTokenAddress, [
+    baseCurrency,
+    transactionState,
+  ]);
   const buyAmountBalances = useGetBalances(buyTokenAddress, [
     destinationCurrency,
+    transactionState,
   ]);
   useHasApproved(
     baseCurrency,
@@ -110,11 +114,10 @@ const Swap = () => {
   const isUserInteractionEnabled: boolean | undefined = useMemo(() => {
     switch (swapButtonState) {
       case (SwapButtonState.needAmountInput,
-      SwapButtonState.needTokenSelection):
-        return false;
-      case (SwapButtonState.needApprove,
-      SwapButtonState.needSwap,
+      SwapButtonState.needTokenSelection,
       SwapButtonState.insufficientBalance):
+        return false;
+      case (SwapButtonState.needApprove, SwapButtonState.needSwap):
         return true;
     }
   }, [swapButtonState]);
@@ -211,6 +214,7 @@ const Swap = () => {
   }, [transactionState]);
 
   // Color
+  const inactiveButtonColor = useColorModeValue("gray.300", "gray.600");
   const buttonColor = useColorModeValue("orange.300", "teal.500");
   const hoverButtonColor = useColorModeValue("teal.500", "orange.300");
   const hoverTextButtonColor = useColorModeValue("gray.50", "gray.900");
@@ -257,11 +261,18 @@ const Swap = () => {
         <Box
           as="button"
           w="30%"
-          bg={buttonColor}
-          _hover={{
-            bg: hoverButtonColor,
-            textColor: hoverTextButtonColor,
-          }}
+          bg={isUserInteractionEnabled ? buttonColor : inactiveButtonColor}
+          _hover={
+            isUserInteractionEnabled
+              ? {
+                  bg: hoverButtonColor,
+                  textColor: hoverTextButtonColor,
+                }
+              : {
+                  bg: "gray.300",
+                  textColor: "gray.600",
+                }
+          }
           justifyContent="center"
           height="50px"
           borderRadius={12}
