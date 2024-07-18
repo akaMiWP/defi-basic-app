@@ -25,13 +25,6 @@ export const useGetPriceFeed = (
           );
 
         const price = ethers.utils.formatEther(priceFeedInBigInt);
-        console.log(
-          sellTokenTicker,
-          "/",
-          buyTokenTicker,
-          price,
-          priceFeedInBigInt
-        );
         setPriceFeed(price);
       } catch (error) {
         console.log(error);

@@ -20,11 +20,8 @@ export const useGetBalances = (
       );
       const balanceInEtherFormat = ethers.utils.formatUnits(balance, "ether");
       setBalances(balanceInEtherFormat);
-      console.log("Token Address:", tokenAddress);
-      console.log("Balances:", balances);
     };
 
-    console.log("Fetching balances...");
     if (!tokenAddress) {
       return;
     }

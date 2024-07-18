@@ -3,10 +3,11 @@ import tokens from "../data/tokens";
 import { wallet, erc20ABI, provider, address } from "../domain/ContractSetup";
 import { useEffect } from "react";
 import { SwapButtonState } from "../domain/SwapButtonState";
-import { isBalancesMoreThanInput } from "../domain/CalculatePrice/";
+import { isBalancesMoreThanInput } from "../domain/CalculatePrice";
 
 export const useHasApproved = (
   tokenTicker: string | null,
+  destinationTicker: string | null,
   swappingAmount: string,
   balances: string | null,
   setSwapButtonState: (state: SwapButtonState) => void,
@@ -14,7 +15,12 @@ export const useHasApproved = (
 ) => {
   useEffect(() => {
     const hasApproved = async (tokenTicker: string, swappingAmount: string) => {
-      if (tokenTicker == "") {
+      if (
+        !tokenTicker ||
+        tokenTicker == "" ||
+        !destinationTicker ||
+        destinationTicker == ""
+      ) {
         setSwapButtonState(SwapButtonState.needTokenSelection);
         return;
       }
@@ -51,7 +57,6 @@ export const useHasApproved = (
     if (!tokenTicker) {
       return;
     }
-    console.log("useHasApproved");
     hasApproved(tokenTicker, swappingAmount);
   }, [...deps]);
 };

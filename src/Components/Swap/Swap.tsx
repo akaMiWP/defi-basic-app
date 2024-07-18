@@ -16,7 +16,7 @@ import tokens from "../../data/tokens";
 import {
   calculateBuyOutput,
   calculateSellInput,
-} from "../../domain/CalculatePrice/";
+} from "../../domain/CalculatePrice";
 import { useGetBalances } from "../../hooks/useGetBalances";
 import { useHasApproved } from "../../hooks/useHasApproved";
 import { useSubscribeToApprovalEvent } from "../../hooks/useSubscribeToApprovalEvent";
@@ -67,11 +67,13 @@ const Swap = () => {
   ]);
   useHasApproved(
     baseCurrency,
+    destinationCurrency,
     sellAmountInput,
     sellAmountBalances,
     setSwapButtonState,
     [
       baseCurrency,
+      destinationCurrency,
       sellAmountInput,
       sellAmountBalances,
       transactionState, //TODO: This seems to be unrelated
@@ -135,11 +137,9 @@ const Swap = () => {
         if (!destinationCurrency) {
           return;
         }
-        console.log("Swapping");
         setDidClickSwapButton(true);
         return;
       case SwapButtonState.needApprove:
-        console.log("Approving");
         setDidClickApproveButton(true);
         return;
       default:
@@ -149,7 +149,6 @@ const Swap = () => {
 
   // Effect hooks
   useEffect(() => {
-    console.log("SwapButtonState:", swapButtonState);
     switch (swapButtonState) {
       case SwapButtonState.needTokenSelection:
         setActionText("Select a token");
@@ -277,7 +276,7 @@ const Swap = () => {
           height="50px"
           borderRadius={12}
           boxShadow="xl"
-          disabled={isUserInteractionEnabled}
+          disabled={!isUserInteractionEnabled}
           onClick={() => actionButtonClicked()}
         >
           <HStack justifyContent="center" paddingLeft={0}>

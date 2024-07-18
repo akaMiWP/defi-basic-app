@@ -12,7 +12,6 @@ export const useApprove = (
 ) => {
   useEffect(() => {
     const approve = async (tokenAddress: string, input: string) => {
-      console.log("Waiting for approve");
       const tokenContract = new ethers.Contract(tokenAddress, erc20ABI, wallet);
       const amount = ethers.utils.parseEther(input);
       const txResponse = await tokenContract.approve(address, amount);

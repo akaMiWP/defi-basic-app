@@ -18,7 +18,6 @@ export const useSwap = (
       token2: string,
       input: string
     ) => {
-      console.log("Waitng for swap");
       const dexContract = new ethers.Contract(address, dexABI, wallet);
       const txResponse = await dexContract.swapTokens(
         tokens[token1],
