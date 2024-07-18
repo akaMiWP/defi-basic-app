@@ -12,7 +12,14 @@ import {
   MenuItem,
   MenuList,
   useColorModeValue,
+  HStack,
 } from "@chakra-ui/react";
+import { useMemo } from "react";
+import iconSBR from "../../assets/SBR-icon.webp";
+import iconGDR from "../../assets/GDR-icon.webp";
+import iconSMY from "../../assets/SMY-icon.webp";
+import iconBDC from "../../assets/BDC-icon.webp";
+import CustomIcon from "./CustomIcon";
 
 interface Props {
   inputTitle: string;
@@ -50,6 +57,21 @@ const InputComponent = ({
   const bg = useColorModeValue("gray.200", "gray.700");
   const textColor = useColorModeValue("gray.600", "gray.400");
 
+  const iconPath = useMemo(() => {
+    if (selectedInput == "SBR") {
+      return iconSBR;
+    }
+    if (selectedInput == "GDR") {
+      return iconGDR;
+    }
+    if (selectedInput == "SMY") {
+      return iconSMY;
+    }
+    if (selectedInput == "BDC") {
+      return iconBDC;
+    }
+  }, [selectedInput]);
+
   return (
     <Center marginTop={marginTop}>
       <Box
@@ -75,10 +97,19 @@ const InputComponent = ({
           <Menu>
             <MenuButton
               as={Button}
-              rightIcon={<ChevronDownIcon />}
               boxShadow="xl"
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+              paddingRight={selectedInput ? "30px" : "15px"}
             >
-              {selectedInput}
+              <HStack spacing={1}>
+                {iconPath && <CustomIcon path={iconPath} boxSize="30px" />}
+                <Box flex="1" textAlign="left" ml={2}>
+                  {selectedInput}
+                </Box>
+                <ChevronDownIcon />
+              </HStack>
             </MenuButton>
             <MenuList>
               {tokens.map((token) => {
